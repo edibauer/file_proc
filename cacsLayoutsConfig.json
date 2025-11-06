@@ -1,0 +1,37 @@
+{
+  "layouts": {
+    "nombre-layout1": {
+      "campo1": { "nullIfAbsent": true },
+      "campo2": { "nullIfAbsent": false },
+      "campo3": { "nullIfAbsent": true }
+    },
+    "Wf_N1_EXT_DAS_CAMBIO_ESTADOS_DIARIOS_FIJA_SGA": {
+      "SECUENCIAL": { "nullIfAbsent": true },
+      "ID_SERVICIO": { "nullIfAbsent": true },
+      "ID_CONTRATO": { "nullIfAbsent": true },
+      "CUENTA_BSCS_ACTUAL": { "nullIfAbsent": true },
+      "PRODUCTO_ACTUAL": { "nullIfAbsent": true },
+      "FECHA_DESDE": { "nullIfAbsent": true },
+      "NOMBRES_CLIENTES": { "nullIfAbsent": true },
+      "IDENTIFICACION": { "nullIfAbsent": true },
+      "TIPO_IDENTIFICACION": { "nullIfAbsent": true },
+      "DESC_STATUS": { "nullIfAbsent": true },
+      "BUSINESS_KEY": { "nullIfAbsent": true },
+      "FECHA_ACTIVACION": { "nullIfAbsent": true },
+      "CODIGO_FAMILIA": { "nullIfAbsent": true },
+      "DESCRIPCION_FAMILIA": { "nullIfAbsent": true },
+      "TECNOLOGIA": { "nullIfAbsent": true },
+      "CODIGO_TIPO_TRABAJO": { "nullIfAbsent": true },
+      "CODIGO_ESTADO_SERVICIO": { "nullIfAbsent": true },
+      "PRECIO_RENTA": { "nullIfAbsent": true },
+      "DESCRIPCION_SERVICIO": { "nullIfAbsent": true },
+      "USUARIO_VENDEDOR": { "nullIfAbsent": true },
+      "NOMBRE_VENDEDOR": { "nullIfAbsent": true },
+      "NOMBRE_VENDEDOR_BAJA": { "nullIfAbsent": true },
+      "IDENT_VEND_BAJA": { "nullIfAbsent": true },
+      "REASON_VALUE": { "nullIfAbsent": true },
+      "OFICINA": { "nullIfAbsent": true },
+      "TIPO_SERVICIO": { "nullIfAbsent": true }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+La columna REASON_VALUE no existe o esta mal escrita en el archivo base

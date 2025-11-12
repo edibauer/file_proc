@@ -14,94 +14,3843 @@ Este script depende de las siguientes librerías de Python:
 |---|---|
 |json|Para la lectura e interpretación de los archivos de configuración en formato JSON.|
 |os|Para la interacción con el sistema operativo, específicamente para la creación de directorios (os.makedirs).|
-|pandas (pd)|Fundamental para la manipulación eficiente de datos, incluyendo la lectura de archivos CSV/TXT (pd.read_csv) y la exportación final (df_out.to_csv).|
+|pandas (pd)|Fundamental para la manipulación eficiente de datos, incluyendo la lectura de archivos CSV/TXT (pd.read_csv) y la exportación final (df_out.to_csv).
 
-### 3. Flujo de Ejecución y Lógica
+### 3. Lista de archivos
+- Para CAC's se tiene el siguiente listado:
 
-El script opera mediante un doble bucle anidado que sigue la siguiente secuencia lógica:
+|ARCHIVO|COLUMNAS|
+|---|---|
+|wf_N1_EXT_POSTPAGO_ACTIVACIONES|SEQUENCE,ORDER_ID,ACCT_ID,SUBS_ID,SERVICE_NUMBER,ID_NUMBER,CUST_NAME,CODIGO_VEND,ACTIVE_DATE,TIPO_ALTA,FLAG_DIFERIDA,CLASSIFICATION_ID,OFFER_DESC,OFFERING_ID,OFFERING_ID_1,OFFERING_TYPE,ACCT_CODE,STATUS,PORTABILITY_ID,SERVICE_NUMBER_1,EX_FIELD13_1,CREATE_TIME_1,CUST_NAME_1,INITIAL_AMOUNT,COMPLETION_DATE_1,ID_TYPE,DISTRIBUCION_LINEA,FIELD4,NOMBRE_VENDEDOR,CODIGO_VENDEDOR_ESPECIFICO,INSTALLMENT_INST_ID,OFFERING_NAME,TOTAL_AMOUNT,TOTAL_AMOUNT_1,INSTALLMENT_INST_ID_1,BILL_CYCLE_TYPE_ID,STATUS_DATE,ADDR,EX_FIELD13,EX_FIELD1,ITEM_NAME,ITEM_SKU_NAME,EMPLOYEE_CODE,BUSINESS_KEY,ORG_NAME,COMPLETION_ORDER_DATE,FECHA_MIGRACION,PREVIEWS_PAYMENTS,PRECIO_RENTA,ID_EMPLEADO,SEGMENTO_CLIENTE|
+|wf_N1_EXT_EVENTOS_POSTPAGO_AXIS|ID_SERVICIO,SECUENCIA_MARCA,FECHA_ACTIVACION,PORTABILIDAD,ID_SERVICIO_ALTERNA,REFERENCIA1_ALTERNA,FECHA_INICIO_ALTERNA,NOMBRE_COMPLETO_ALTERNO,SALDO_ALTERNO,FECHA_FIN_ALTERNA,NOMBRE_COMPLETO,ID_CONTRATO,CODIGO_DOC,ID_SOLICITUD,DATO_IDENTIFICACION,ID_VENDEDOR_PERSONA,ID_TIPO_APROBACION,FECHA_MARCA,ID_IDENTIFICACION,ID_SOLICITUD1,ID_DETALLE_SOLICITUD,ID_FORMA_PAGO,ID_VENDEDOR_ESPECIFICO,NUMERO_FINANCIAMIENTO,FECHA_INGRESO,NUMERO_SERIE,ID_CICLO,REFERENCIA4,ID_USUARIO_DIGITADOR,VALOR,REFERENCIA1,ID_PLAN,FORMA_PAGO,TIPO_ALTA,FLAG_PORTABILIDAD,ESTADO,CODIGO_PRODUCTO,CIUDAD,DISTRIBUCION_LINEA,ID_DETALLE_PLAN,NOMBRE_VENDEDOR_ESPECIFICO,NOMBRE_ASESOR,MODELO_EQUIPO,CANTIDAD_FINANCIAMIENTO,TOTAL_FACTURADO_FINANCIAMIENTO,MONTO_FINANCIADO,ENTIDAD_BANCARIA,ID_EMPLEADO,OFICINA,SEGMENTO_CLIENTE,TARIFA_BASICA,DSC_PLAN_ACTUAL
+|wf_N1_EXT_DTH_PREVENTA|SECUENCIAL,ID_CONTRATO,ID_SERVICIO,IDENTIFICACION,NOMBRES_CLIENTE,CODIGO_VENDEDOR,FECHA_ACTIVACION,TIPO_ALTA,CODIGO_PRODUCTO,PRODUCTO,CUENTA_BSCS,ESTADO,CIUDAD_INSTALACION,PARROQUIA_INSTALACION,PROVINCIA_INSTALACION,DIRECCION_INSTALACION,TIPO_DOCUMENTO,FLAG_MULTIPUNTO,ENTIDAD_BANCARIA,FORMA_PAGO,CODIGO_USUARIO_SISTEMA,NOMBRE_VENDEDOR,CODIGO_VENDEDOR_ESPECIFICO,FECHA_INGRESO,CICLO_FACTURACION,BUSINESS_KEY,PRECIO_RENTA,DESCRIPCION_SERVICIO,ORDER_ID,ID_SUCURSAL,TIPO_SERVICIO,FAMILIA,TECNOLOGIA,CANTIDAD_SERVICIO,ID_EMPLEADO,OFICINA,SEGMENTO_CLIENTE
+|wf_N1_EXT_DTH_PREVENTA_PB_DTH_PREVENTA|DATO_IDENTIFICACION,DATO_NOMBRE_COMPLETO,ID_VENDEDOR_PERSONA,ID_CONTRATO,ID_SERVICIO,FECHA_MARCA,SECUENCIA_MARCA,ID_DETALLE_PLAN,ID_SOLICITUD,ID_DETALLE_SOLICITUD,ID_DETALLE_SERVICIO,CODIGO_DOC,ID_SUBPRODUCTO,DATO_ID_IDENTIFICACION,ID_TIPO_APROBACION,FECHA_INGRESO,ID_USUARIO_DIGITADOR,ID_VENDEDOR_ESPECIFICO,ID_CICLO,ESTADO,ENTIDAD_BANCARIA,ID_PLAN,ID_CATEGORIA_AMX,FORMA_PAGO,NOMBRE_VENDEDOR,TIPO_ALTA,ID_EMPLEADO,OFICINA,SEGMENTO_CLIENTE,TIPO_SERVICIO,TARIFA_BASICA,DSC_PLAN_ACTUAL
+|wf_N1_EXT_DAS_EVENTOS_FIJA_SGA|SECUENCIAL,ID_CONTRATO,ID_SERVICIO,IDENTIFICACION,CLIENTE,CODIGO_VENDEDOR,FECHA_ACTIVACION,DESCRIPCION_FAMILIA,CODIGO_SERVICIO,DESCRIPCION_SERVICIO,TIPO_ALTA,TIPO_DOCUMENTO,BUSINESS_KEY,ESTADO,TECNOLOGIA,PRECIO_RENTA,NOMBRE_VENDEDOR_FIJA,COD_FAMILIA,ID_SUCURSAL,TARIFA_BASICA_DESCONTADA,CODIGO_CLIENTE,CODIGO_RUC,CANAL,FORMA_PAGO,CICLO_FACTURACION,TIPO_PAQUETE,SID,USUARIO_REGISTRO,CANTON,PAQUETE,NODO_CLUSTER,OFICINA,SEGMENTO_CLIENTE|
+|wf_N1_EXT_EVENTOS_FIJA|SECUENCIAL,ID_CONTRATO,ID_SERVICIO,IDENTIFICACION,NOMBRES_CLIENTE,CODIGO_VENDEDOR,FECHA_ACTIVACION,CODIGO_FAMILIA,DESCRIPCION_FAMILIA,CODIGO_SERVICIO,DESCRIPCION_SERVICIO,TIPO_ALTA,TIPO_DOCUMENTO,BUSINESS_KEY,ESTADO,SUBSCRIBERID,CUENTA,TECNOLOGIA,PRECIO_RENTA,EMPLOYEE_CODE,ID_SOLICITUD,ID_SUCURSAL,TARIFA_BASICA_DESCONTADA,FORMA_PAGO,CICLO_FACTURACION,CANTON,NOMBRE_VENDEDOR,PAQUETE,TIPO_PAQUETE,ID_EMPLEADO,NODO_CLUSTER,OFICINA,SEGMENTO_CLIENTE
+|wf_N1_EXT_EQUIPOS_HANDSET|SECUENCIAL,FECHA_FACTURA,NO_ORDEN,NO_FACTURA,DESC_PROD,TIPO_TRX,CANTIDAD_PEDIDA,CANTIDAD_DEV,VALOR_PROD_UNIT,CANAL,CLIENTE,OPERADOR,COSTO_EQUIPO,DESCUENTO,VENTA_NETA,MKT_MARCA_MODELO,CODIGO_VENDEDOR,IDENTIFICACION_VEND,IMEI,MONTO_FORMA_PAGO,FORMA_PAGO,MARCA,OFICINA
+|wf_N1_EXT_EQUIPOS_TV|SECUENCIAL,FECHA_FACTURA,NO_ORDEN,FACT_IN_CAJA,DESC_PROD,CANTIDAD_PEDIDA,CANTIDAD_DEV,VALOR_PROD_TOTAL,CANAL,CLIENTE,OPERADOR,COSTO_UNIT,DESCUENTO_TOTAL,VENTA_NETA,CODIGO_VENDEDOR,IDENTIFICACION_VEND,MONTO_FORMA_PAGO,FORMA_PAGO,MARCA,TIPO_EQUIPO,OFICINA,CATEGORIA
+|wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS|SEQUENCE,SUBS_ID,SERVICE_NUMBER,ACCT_ID,ACCT_CODE,OFFERING_ID,STATUS,STATUS_TIME,REASON_ID,REASON_VALUE,CUST_NAME,ID_NUMBER,ID_TYPE,STATUS_1,BUSINESS_KEY,ACTIVE_DATE,FECHA_MIGRACION,PREVIEWS_PAYMENTS,CANTON,NOMBRE_VENDEDOR,IDENTIFICACION_VENDEDOR,OFICINA,TARIFA_BASICA,DESC_PLAN_ACTUAL,TIPO_SERVICIO|
+|wf_N1_EXT_ESTADOS_DIARIOS_POSTPAGO|ID_SERVICIO,ID_CONTRATO,VALOR,FECHA_DESDE,FECHA_MARCA,SECUENCIA_MARCA,ID_DETALLE_PLAN,NOMBRE_COMPLETO,IDENTIFICACION,ID_IDENTIFICACION,REFERENCIA_4,DESCRIPCION,OBSERVACION,ID_PLAN,NOMBRE_VENDEDOR,IDENTIFICACION_VENDEDOR,OFICINA,TARIFA_BASICA,DSC_PLAN_ACTUAL,TIPO_SERVICIO|
+|wf_N1_EXT_DAS_CAMBIO_ESTADOS_DIARIOS_FIJA_SGA|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,CUENTA_BSCS_ACTUAL,PRODUCTO_ACTUAL,FECHA_DESDE,NOMBRES_CLIENTES,IDENTIFICACION,TIPO_IDENTIFICACION,DESC_STATUS,BUSINESS_KEY,FECHA_ACTIVACION,CODIGO_FAMILIA,DESCRIPCION_FAMILIA,TECNOLOGIA,CODIGO_TIPO_TRABAJO,CODIGO_ESTADO_SERVICIO,PRECIO_RENTA,DESCRIPCION_SERVICIO,USUARIO_VENDEDOR,NOMBRE_VENDEDOR,NOMBRE_VENDEDOR_BAJA,IDENT_VEND_BAJA,REAZON_VALUE,OFICINA,TIPO_SERVICIO|
+|wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS_FIJA|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,CUENTA_BSCS_ACTUAL,PRODUCTO_ACTUAL,ESTADO_ACTUAL,FECHA_DESDE,CODIGO_RAZON,DESC_RAZON,NOMBRES_CLIENTE,IDENTIFICACION,TIPO_IDENTIFICACION,DESC_ESTATUS,SUBSCRIBERID,BUSINESS_KEY,FECHA_ACTIVACION,CODIGO_FAMILIA,DESCRIPCION_FAMILIA,TECNOLOGIA,CANTON,NOMBRE_VENDEDOR,IDENTIFICACION_VENDEDOR,OFICINA,TIPO_SERVICIO,TARIFA_BASICA,DESC_PLAN_ACTUAL|
+|wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS_DTH|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,CUENTA_BSCS_ACTUAL,PRODUCTO_ACTUAL,ESTADO_ACTUAL,FECHA_DESDE,CODIGO_RAZON,DESC_RAZON,NOMBRES_CLIENTE,IDENTIFICACION,TIPO_IDENTIFICACION,DESC_ESTATUS,FLAG_MULTIPUNTO,BUSINESS_KEY,FECHA_ACTIVACION,TIPO_SERVICIO,FAMILIA,TECNOLOGIA,CANTIDAD_SERVICIOS,CANTON,NOMBRE_VENDEDOR,IDENTIFICACION_VENDEDOR,OFICINA,TARIFA_BASICA,DESC_PLAN_ACTUAL|
+|wf_N1_EXT_ESTADOS_DIARIOS_DTH|ID_SERVICIO,ID_CONTRATO,VALOR,FECHA_DESDE,FECHA_MARCA,SECUENCIA_MARCA,ID_DETALLE_PLAN,NOMBRE_COMPLETO,IDENTIFICACION,ID_IDENTIFICACION,REFERENCIA_4,DESCRIPCION,TIPO_SERVICIO,FAMILIA,TECNOLOGIA,CANTIDAD_SERVICIOS,OBSERVACION,ID_PLAN,NOMBRE_VENDEDOR,IDENTIFICACION_VENDEDOR,OFICINA,TARIFA_BASICA,DESC_PLAN_ACTUAL|
+|wf_N1_EXT_CAMBIO_PLANES_DIARIOS|SEQUENCE,SERVICE_NUMBER,ORDER_ID,ACTIVE_DATE,ACCT_ID,OFFERING_ID,OFFERING_ID1,STATUS_DATE,ACCT_CODE,BUSINESS_KEY,FECHA_MIGRACION,TARIFA_ANTERIOR,TARIFA_NUEVA,DESCRIPCION_PLAN_ACTUAL,DESCRIPCION_PLAN_ANTERIOR,EMPLOYEE_CODE,CODIGO_VENDEDOR,OFICINA,ID_EMPLEADO,FECHA_PROGRAMACION|
+|wf_N1_EXT_PLANES_DIARIOS_POSTPAGO|SEQUENCE,SERVICE_NUMBER,ORDER_ID,ACTIVE_DATE,ACCT_ID,OFFERING_ID,OFFERING_ID1,STATUS_DATE,ACCT_CODE,BUSINESS_KEY,FECHA_MIGRACION,TARIFA_ANTERIOR,TARIFA_NUEVA,DESCRIPCION_PLAN_ACTUAL,DESCRIPCION_PLAN_ANTERIOR,EMPLOYEE_CODE,CODIGO_VENDEDOR,FECHA_FIN,ID_DETALLE_PLAN,FECHA_MARCA,OFICINA,ID_EMPLEADO|
+|wf_N1_EXT_CAMBIO_PLANES_DIARIOS_DTH|SECUENCIAL,ID_CONTRATO,PRODUCTO_ACTUAL,FECHA_INICIO,CUENTA_BSCS_ACTUAL,BUSINESS_KEY,PRECIO_RENTA,TARIFA_ANTERIOR,TARIFA_NUEVA,DESCRIPCION_PLAN_ACTUAL,DESCRIPCION_PLAN_ANTERIOR,EMPLOYEE_CODE,CODIGO_VENDEDOR,OFICINA,ID_EMPLEADO,FECHA_PROGRAMACION|
+|wf_N1_EXT_CAMBIO_PLANES_DIARIOS_FIJA|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,PRODUCTO_ACTUAL,FECHA_INICIO,FECHA_FIN,CUENTA_BSCS_ACTUAL,FECHA_ACTIVACION,PRODUCTO_ANTERIOR,SUBSCRIBERID,BUSINESS_KEY,PRECIO_RENTA,TARIFA_ANTERIOR,TARIFA_NUEVA,DESCRIPCION_PLAN_ACTUAL,DESCRIPCION_PLAN_ANTERIOR,EMPLOYEE_CODE,ID_SOLICITUD,CODIGO_VENDEDOR,TARIFA_BASICA_DESCONTADA,OFICINA,ID_EMPLEADO,FECHA_PROGRAMACION|
+|wf_N1_EXT_CAMBIO_PLANES_DIARIOS_FIJA_SGA|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,FECHA_FIN,CUENTA_BSCS_ACTUAL,FECHA_ACTIVACION,SUBSCRIBERID,TARIFA_ANTERIOR,TARIFA_NUEVA,PRODUCTO_ANTERIOR,PRODUCTO_ACTUAL,DESCRIPCION_PLAN_ANTERIOR,DESCRIPCION_PLAN_ACTUAL,EMPLOYEE_CODE,ID_SOLICITUD,CODIGO_VENDEDOR,OFICINA_CAC,BUSSINES_KEY,ID_EMPLEADO|
+|wf_N1_EXT_PLANES_DIARIOS_DTH|SEQUENCE,SERVICE_NUMBER,ORDER_ID,ACTIVE_DATE,ACCT_ID,OFFERING_ID,OFFERING_ID1,STATUS_DATE,ACCT_CODE,BUSINESS_KEY,FECHA_MIGRACION,TARIFA_ANTERIOR,TARIFA_NUEVA,DESCRIPCION_PLAN_ACTUAL,DESCRIPCION_PLAN_ANTERIOR,EMPLOYEE_CODE,CODIGO_VENDEDOR,FECHA_FIN,ID_DETALLE_PLAN,FECHA_MARCA,OFICINA,ID_EMPLEADO|
+|wf_N1_EXT_OFERTA_BONDLE|ORDER_ID,FECHA_INICIO,GROUP_ID,GROUP_NAME,OFERTA_BUNDLE,SERVICE_NUMBER,TRANSACCION_GRUPO,OFFERING_ID,OFFERING_NAME,TRANSACCION_SERVICIO,BUSINESS_KEY,TECNOLOGIA|
+|wf_N1_EXT_FEATURES_MOVIL_AXIS|IDENTIFICACION_VENDEDOR,SERVICIO,FECHA_DESDE,DESCRIPCION,CODIGO_FEATURE,IDENTIFICACION_CLIENTE,PRECIO,FECHA_MARCA_PRINCIPAL,SECUENCIA_MARCA_PRINCIPAL,FECHA_ALTA,CUENTA,OFICINA|
+|wf_N1_EXT_FEATURES_MOVIL_POSTPAGO|IDENTIFICACION_VENDEDOR,SERVICIO,FECHA_DESDE_FEATURE,DESCRIPCION,CODIGO_FEATURE,IDENTIFICACION_CLIENTE,PRECIO,BUSINESS_KEY,BUSINESS_KEY_FEATURE,CUENTA,FECHA_ACT_FEATURE,OFICINA,SEGMENTO_CLIENTE|
+|wf_N1_EXT_FEATURES_PPA|SERVICE_NUMBER,LINE_STATUS,SUBPRODUCT,ID_CUSTOMER,TIPO_IDENTIFICACION,ID_PLAN,PLAN_NAME,ID_FEATURE,DESC_FEATURE,START_DATE,FEATURE_STATUS,TOTAL_RATE,EMPLOYEE_CODE,EMPLOYEE_NAME,CAC_OFFICE,BASE_RATE,CODIGO_ESTADO_SERVICIO,CODIGO_ESTADO_FEATURE,ID_EMPLEADO|
+|wf_N1_FACTURAS_EMITIDAS_HW|SECUENCIAL,NUMERO_FACTURA,ID_CONTRATO,VALOR_FACTURADO,FECHA_MAX_PAGO,FECHA_FACTURACION,FECHA_CORTE,NOMBRES_CLIENTE,DIRECCION_DOMICILIO,CICLO_FACTURACION,CUENTA|
+|wt_N1_FACTURAS_EMITIDAS_SGA|ID_INTERNO,NRO_PROYECTO,FECHA_MAX_PAGO,FEC_EMISION_FACTURA,FECHA_CORTE,TOTAL_FACTURADO,ID_CICLO,CICLO_FACTURACION,NOMBRE_CLIENTE,LINEA_COBRANZA,DIRECCION_DOMICILIO,CUENTA_BSCS|
+|wt_N1_FACTURAS_EMITIDAS_AXIS|CUSTOMER_ID,FACTURA,CUENTA_BSCS,FECHA_FACTURACION,FECHA_MAX_PAGO,CICLO_FACTURACION,VALOR_FACTURADO,NOMBRES_CLIENTE,DIRECCION_DOMICILIO|
+|wf_N1_FACTURAS_PAGADAS_AXIS|NO_FACTURA,CUENTA_BSCS,FECHA_FACTURACION,VALOR_PAGADO,VALOR_FACTURADO,FECHA_PAGO,DESC_FORMA_PAGO,CODIGO_ENTIDAD,MEDIO_CANAL,REGION,GRUPO,USUARIO,FORMA_PAGO|
+|wf_N1_FACTURAS_PAGADAS_HW|SECUENCIAL,NUMERO_FACTURA,VALOR_PAGADO,FECHA_PAGO,CUENTA_BSCS,VALOR_FACTURADO,DESCRIPCION_PAGO,CODIGO_ENTIDAD,PROP_VALUE,CUST_SEGMENT,EMPLOYEE_CODE,FORMA_PAGO,PAYMENT_METHOD_ID|
+|wf_N1_FACTURAS_PAGADAS_FIJA_SGA|SECUENCIAL,ID_INTERNO,FEC_EMISION_FACTURA,FECHA_PAGO,CUENTA_BSCS,VALOR_PAGADO,LINEA_COBRANZA,DIRECCION_DOMICILIO,FORMA_PAGO,PAYMENT_METHOD_ID|
+|wf_N1_CRUCE_VENTA|ID_SERVICIO,CODIGO_VENDEDOR_ANTERIOR,CODIGO_VENDEDOR_ACTUAL,CEDULA_VENDEDOR_ACTUAL,BUSINESS_KEY,CANAL,OFICINA
+|wf_N1_EXT_FEATURE_DTH_PREVENTA|SECUENCIAL,ID_SOLICITUD,ID_CONTRATO,ID_SERVICIO,CODIGO_FEATURE,FECH_ACT_FEATURE,ESTADO_FEATURE,TIPO_ALTA,CODIGO_VENDEDOR,FLAG_MULTIPUNTO,BUSINESS_KEY_F,PRECIO_RENTA,FLAG_TIPO_EVENTO,CUENTA,CIUDAD_INSTALACION,PARROQUIA_INSTALACION,PROVINCIA_INSTALACION,DIRECCION_INSTALACION,TIPO_DOCUMENTO,ENTIDAD_BANCARIA,FORMA_PAGO,CICLO_FACTURACION,BUSINESS_KEY,TIPO_SERVICIO,FAMILIA,TEGNOLOGIA,CANTIDAD_SERVICIO,ID_EMPLEADO,DESCRIPCION_FEATURE,OFICINA,SEGMENTO_CLIENTE|
+|wf_N1_EXT_FEATURES_FIJA|SECUENCIAL,ID_SOLICITUD,ID_CONTRATO,ID_SERVICIO,CODIGO_FEATURE,FECH_ACT_FEATURE,ESTADO_FEATURE,TIPO_ALTA,CODIGO_VENDEDOR,FLAG_MULTIPUNTO,BUSINESS_KEY_F,PRECIO_RENTA,FLAG_TIPO_EVENTO,CUENTA,CIUDAD_INSTALACION,PARROQUIA_INSTALACION,PROVINCIA_INSTALACION,DIRECCION_INSTALACION,TIPO_DOCUMENTO,ENTIDAD_BANCARIA,FORMA_PAGO,CICLO_FACTURACION,BUSINESS_KEY,EMPLOYEE_CODE,NOMBRE_PLAN,IDENTIFICACION,NOMBRES_CLIENTE,TARIFA_BASICA_DESCONTADA,TECNOLOGIA,DESCRIPCION_FAMILIA,NOMBRE_VENDEDOR,ID_EMPLEADO,OFICINA,SEGMENTO_CLIENTE|
+|wf_N1_EXT_DAS_FEATURES_FIJA_SGA|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,CODIGO_VENDEDOR,PRECIO_RENTA,TIPO_ALTA,TARIFA_BASICA_DESCONTADA,PRODUCTO_ACTUAL,ESTADO_ACTUAL,NOMBRES_CLIENTES,IDENTIFICACION,TIPO_IDENTIFICACION,BUSINESS_KEY,FECHA_ACTIVACION,CODIGO_FAMILIA,CODIGO_CLIENTE,CODIGO_RUC,CANAL,FORMA_PAGO,TIPO_PAQUETE,SID,USUARIO_REGISTRO,CANTON,PAQUETE,NOMBRE_VENDEDOR,TECNOLOGIA,DESCRIPCION_FAMILIA,DESCRIPCION_ADICIONAL,OFICINA,SEGMENTO_CLIENTE
 
-#### A. Bucle Principal (Archivos de Configuración)
+- Para CC, se tiene el siguiente listado
 
-1. Iteración de Configuración: Itera sobre la lista de nombres de archivos proporcionada en la variable content.
-
-2. Lectura JSON: Abre cada archivo de configuración dentro de la ruta config_dir, lee su contenido y lo carga como un objeto JSON (config).
-
-#### B. Bucle Anidado (Layouts de Datos)
-
-1. Iteración de Layouts: Itera sobre cada clave dentro del diccionario 'layouts' del archivo de configuración (config['layouts'].keys()). Cada clave representa el nombre de un archivo de datos base.
-
-2. Determinación de Columnas Requeridas: Las columnas necesarias (config_columns) se extraen de la configuración del layout actual.
-
-3. Carga del Archivo Base: Carga el archivo de datos base correspondiente ({layout}.txt) desde la ruta files_dir. Se asume que estos archivos usan el carácter | como delimitador y codificación 'latin 1'.
-
-4. Validación y Filtrado de Columnas:
-
-- Crea un DataFrame de salida vacío (df_out).
-
-- Itera sobre cada columna requerida (column) de la configuración.
-
-- Validación: Comprueba si la columna existe en el DataFrame de datos base (df.columns).
-
-- Manejo de Error (Logging): Si la columna no se encuentra, se registra una entrada en un archivo de log específico ({layout}_log.txt) indicando la columna faltante y continúa con la siguiente columna.
-
-- Filtrado: Si la columna existe, se copia la serie de datos correspondiente de df a df_out.
-
-#### C. Exportación Clasificada
-
-1. Clasificación de Salida: Después de llenar df_out, el script clasifica el archivo final basándose en el nombre original del archivo de configuración (file):
-
-- Si contiene "cacs": El archivo se guarda en el subdirectorio {main_dir}/cacs.
-
-- Si contiene "cc": El archivo se guarda en el subdirectorio {main_dir}/cc.
-
-2. Creación de Directorios: Utiliza os.makedirs(..., exist_ok=True) para asegurar que el directorio de destino exista antes de intentar escribir el archivo.
-
-3. Escritura del Archivo: Exporta el DataFrame filtrado (df_out) al directorio y nombre de archivo final ({layout}_out.txt), usando | como separador y codificación 'latin 1'.
-
-### 4. Entradas (Archivos y Variables de Entorno)
-
-El script requiere la existencia de varias variables y archivos en rutas específicas:
-
-|Tipo de Entrada|Variable/Path|Descripción|
-|---|---|---|
-|Variable|content|Una lista (o iterable) que contiene los nombres de los archivos de configuración JSON a procesar.|
-|Variable|config_dir|Ruta del directorio donde se encuentran los archivos JSON de configuración.|
-|Variable|files_dir|Ruta del directorio donde se encuentran los archivos de datos base (.txt).|
-|Variable|main_dir|Ruta del directorio raíz donde se crearán los directorios de salida (cacs y cc).|
-|Archivos|{file}.json|Archivos de configuración que definen qué layouts procesar y qué columnas seleccionar.|
-|Archivos|{layout}.txt|Archivos de datos de entrada delimitados por `|`.|
+|ARCHIVO|COLUMNAS|
+|---|---|
+|wf_N1_EXT_EVENTOS_POSTPAGO_AXIS|ID_SERVICIO,SECUENCIA_MARCA,FECHA_ACTIVACION,PORTABILIDAD,ID_SERVICIO_ALTERNA,REFERENCIA1_ALTERNA,FECHA_INICIO_ALTERNA,NOMBRE_COMPLETO_ALTERNO,SALDO_ALTERNO,FECHA_FIN_ALTERNA,NOMBRE_COMPLETO,ID_CONTRATO,CODIGO_DOC,ID_SOLICITUD,DATO_IDENTIFICACION,ID_VENDEDOR_PERSONA,ID_TIPO_APROBACION,FECHA_MARCA,ID_IDENTIFICACION,ID_SOLICITUD1,ID_DETALLE_SOLICITUD,ID_FORMA_PAGO,ID_VENDEDOR_ESPECIFICO,NUMERO_FINANCIAMIENTO,FECHA_INGRESO,NUMERO_SERIE,ID_CICLO,REFERENCIA4,ID_USUARIO_DIGITADOR,VALOR,REFERENCIA1,ID_PLAN,FORMA_PAGO,TIPO_ALTA,FLAG_PORTABILIDAD,ESTADO,CODIGO_PRODUCTO,CIUDAD,DISTRIBUCION_LINEA,ID_DETALLE_PLAN,NOMBRE_VENDEDOR_ESPECIFICO,NOMBRE_ASESOR,MODELO_EQUIPO,CANTIDAD_FINANCIAMIENTO,TOTAL_FACTURADO_FINANCIAMIENTO,MONTO_FINANCIADO,ENTIDAD_BANCARIA,ID_EMPLEADO,OFICINA,SEGMENTO_CLIENTE,TARIFA_BASICA,DSC_PLAN_ACTUAL|
+|Wf_N1_EXT_POSTPAGO_ACTIVACIONES|SEQUENCE,ORDER_ID,ACCT_ID,SUBS_ID,SERVICE_NUMBER,ID_NUMBER,CUST_NAME,CODIGO_VEND,ACTIVE_DATE,TIPO_ALTA,FLAG_DIFERIDA,CLASSIFICATION_ID,OFFER_DESC,OFFERING_ID,OFFERING_ID_1,OFFERING_TYPE,ACCT_CODE,STATUS,PORTABILITY_ID,SERVICE_NUMBER_1,EX_FIELD13_1,CREATE_TIME_1,CUST_NAME_1,INITIAL_AMOUNT,COMPLETION_DATE_1,ID_TYPE,DISTRIBUCION_LINEA,FIELD4,NOMBRE_VENDEDOR,CODIGO_VENDEDOR_ESPECIFICO,INSTALLMENT_INST_ID,OFFERING_NAME,TOTAL_AMOUNT,TOTAL_AMOUNT_1,INSTALLMENT_INST_ID_1,BILL_CYCLE_TYPE_ID,STATUS_DATE,ADDR,EX_FIELD13,EX_FIELD1,ITEM_NAME,ITEM_SKU_NAME,EMPLOYEE_CODE,BUSINESS_KEY,ORG_NAME,COMPLETION_ORDER_DATE,FECHA_MIGRACION,PREVIEWS_PAYMENTS,PRECIO_RENTA,ID_EMPLEADO,SEGMENTO_CLIENTE|
+|wf_N1_EXT_DTH_PREVENTA|SECUENCIAL,ID_CONTRATO,ID_SERVICIO,IDENTIFICACION,NOMBRES_CLIENTE,CODIGO_VENDEDOR,FECHA_ACTIVACION,TIPO_ALTA,CODIGO_PRODUCTO,PRODUCTO,CUENTA_BSCS,ESTADO,CIUDAD_INSTALACION,PARROQUIA_INSTALACION,PROVINCIA_INSTALACION,DIRECCION_INSTALACION,TIPO_DOCUMENTO,FLAG_MULTIPUNTO,ENTIDAD_BANCARIA,FORMA_PAGO,CODIGO_USUARIO_SISTEMA,NOMBRE_VENDEDOR,CODIGO_VENDEDOR_ESPECIFICO,FECHA_INGRESO,CICLO_FACTURACION,BUSINESS_KEY,PRECIO_RENTA,DESCRIPCION_SERVICIO,ORDER_ID,ID_SUCURSAL,TIPO_SERVICIO,FAMILIA,TECNOLOGIA,CANTIDAD_SERVICIO,ID_EMPLEADO,OFICINA,SEGMENTO_CLIENTE|
+|wf_N1_EXT_DTH_PREVENTA_PB_DTH_PREVENTA|DATO_IDENTIFICACION,DATO_NOMBRE_COMPLETO,ID_VENDEDOR_PERSONA,ID_CONTRATO,ID_SERVICIO,FECHA_MARCA,SECUENCIA_MARCA,ID_DETALLE_PLAN,ID_SOLICITUD,ID_DETALLE_SOLICITUD,ID_DETALLE_SERVICIO,CODIGO_DOC,ID_SUBPRODUCTO,DATO_ID_IDENTIFICACION,ID_TIPO_APROBACION,FECHA_INGRESO,ID_USUARIO_DIGITADOR,ID_VENDEDOR_ESPECIFICO,ID_CICLO,ESTADO,ENTIDAD_BANCARIA,ID_PLAN,ID_CATEGORIA_AMX,FORMA_PAGO,NOMBRE_VENDEDOR,TIPO_ALTA,ID_EMPLEADO,OFICINA,SEGMENTO_CLIENTE,TIPO_SERVICIO,TARIFA_BASICA,DSC_PLAN_ACTUAL|
+|wf_N1_EXT_DAS_EVENTOS_FIJA_SGA|SECUENCIAL,ID_CONTRATO,ID_SERVICIO,IDENTIFICACION,CLIENTE,CODIGO_VENDEDOR,FECHA_ACTIVACION,DESCRIPCION_FAMILIA,CODIGO_SERVICIO,DESCRIPCION_SERVICIO,TIPO_ALTA,TIPO_DOCUMENTO,BUSINESS_KEY,ESTADO,TECNOLOGIA,PRECIO_RENTA,NOMBRE_VENDEDOR_FIJA,COD_FAMILIA,ID_SUCURSAL,TARIFA_BASICA_DESCONTADA,CODIGO_CLIENTE,CODIGO_RUC,CANAL,FORMA_PAGO,CICLO_FACTURACION,TIPO_PAQUETE,SID,USUARIO_REGISTRO,CANTON,PAQUETE,NODO_CLUSTER,OFICINA,SEGMENTO_CLIENTE|
+|wf_N1_EXT_EVENTOS_FIJA|SECUENCIAL,ID_CONTRATO,ID_SERVICIO,IDENTIFICACION,NOMBRES_CLIENTE,CODIGO_VENDEDOR,FECHA_ACTIVACION,CODIGO_FAMILIA,DESCRIPCION_FAMILIA,CODIGO_SERVICIO,DESCRIPCION_SERVICIO,TIPO_ALTA,TIPO_DOCUMENTO,BUSINESS_KEY,ESTADO,SUBSCRIBERID,CUENTA,TECNOLOGIA,PRECIO_RENTA,EMPLOYEE_CODE,ID_SOLICITUD,ID_SUCURSAL,TARIFA_BASICA_DESCONTADA,FORMA_PAGO,CICLO_FACTURACION,CANTON,NOMBRE_VENDEDOR,PAQUETE,TIPO_PAQUETE,ID_EMPLEADO,NODO_CLUSTER,OFICINA,SEGMENTO_CLIENTE|
+|Wf_N1_EXT_DAS_CAMBIO_ESTADOS_DIARIOS_FIJA_SGA|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,CUENTA_BSCS_ACTUAL,PRODUCTO_ACTUAL,FECHA_DESDE,NOMBRES_CLIENTES,IDENTIFICACION,TIPO_IDENTIFICACION,DESC_STATUS,BUSINESS_KEY,FECHA_ACTIVACION,CODIGO_FAMILIA,DESCRIPCION_FAMILIA,TECNOLOGIA,CODIGO_TIPO_TRABAJO,CODIGO_ESTADO_SERVICIO,PRECIO_RENTA,DESCRIPCION_SERVICIO,USUARIO_VENDEDOR,NOMBRE_VENDEDOR,NOMBRE_VENDEDOR_BAJA,IDENT_VEND_BAJA,REAZON_VALUE,OFICINA,TIPO_SERVICIO|
+|Wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS_FIJA|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,CUENTA_BSCS_ACTUAL,PRODUCTO_ACTUAL,ESTADO_ACTUAL,FECHA_DESDE,CODIGO_RAZON,DESC_RAZON,NOMBRES_CLIENTE,IDENTIFICACION,TIPO_IDENTIFICACION,DESC_ESTATUS,SUBSCRIBERID,BUSINESS_KEY,FECHA_ACTIVACION,CODIGO_FAMILIA,DESCRIPCION_FAMILIA,TECNOLOGIA,CANTON,NOMBRE_VENDEDOR,IDENTIFICACION_VENDEDOR,OFICINA,TIPO_SERVICIO,TARIFA_BASICA,DESC_PLAN_ACTUAL|
+|Wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS_DTH|SECUENCIAL,ID_SERVICIO,ID_CONTRATO,CUENTA_BSCS_ACTUAL,PRODUCTO_ACTUAL,ESTADO_ACTUAL,FECHA_DESDE,CODIGO_RAZON,DESC_RAZON,NOMBRES_CLIENTE,IDENTIFICACION,TIPO_IDENTIFICACION,DESC_ESTATUS,FLAG_MULTIPUNTO,BUSINESS_KEY,FECHA_ACTIVACION,TIPO_SERVICIO,FAMILIA,TECNOLOGIA,CANTIDAD_SERVICIOS,CANTON,NOMBRE_VENDEDOR,IDENTIFICACION_VENDEDOR,OFICINA,TARIFA_BASICA,DESC_PLAN_ACTUAL|
+|wf_N1_EXT_ESTADOS_DIARIOS_DTH|ID_SERVICIO,ID_CONTRATO,VALOR,FECHA_DESDE,FECHA_MARCA,SECUENCIA_MARCA,ID_DETALLE_PLAN,NOMBRE_COMPLETO,IDENTIFICACION,ID_IDENTIFICACION,REFERENCIA_4,DESCRIPCION,TIPO_SERVICIO,FAMILIA,TECNOLOGIA,CANTIDAD_SERVICIOS,OBSERVACION,ID_PLAN,NOMBRE_VENDEDOR,IDENTIFICACION_VENDEDOR,OFICINA,TARIFA_BASICA,DESC_PLAN_ACTUAL|
+|wf_N1_FACTURAS_PAGADAS_HW|SECUENCIAL,NUMERO_FACTURA,VALOR_PAGADO,FECHA_PAGO,CUENTA_BSCS,VALOR_FACTURADO,DESCRIPCION_PAGO,CODIGO_ENTIDAD,PROP_VALUE,CUST_SEGMENT,EMPLOYEE_CODE,FORMA_PAGO,PAYMENT_METHOD_ID|
+|wf_N1_FACTURAS_PAGADAS_FIJA_SGA|SECUENCIAL,ID_INTERNO,FEC_EMISION_FACTURA,FECHA_PAGO,CUENTA_BSCS,VALOR_PAGADO,LINEA_COBRANZA,DIRECCION_DOMICILIO,FORMA_PAGO,PAYMENT_METHOD_ID|
+|wf_N1_FACTURAS_PAGADAS_AXIS|NO_FACTURA,CUENTA_BSCS,FECHA_FACTURACION,VALOR_PAGADO,VALOR_FACTURADO,FECHA_PAGO,DESC_FORMA_PAGO,CODIGO_ENTIDAD,MEDIO_CANAL,REGION,GRUPO,USUARIO,FORMA_PAGO|
+|wt_N1_FACTURAS_EMITIDAS_SGA|ID_INTERNO,NRO_PROYECTO,FECHA_MAX_PAGO,FEC_EMISION_FACTURA,FECHA_CORTE,TOTAL_FACTURADO,ID_CICLO,CICLO_FACTURACION,NOMBRE_CLIENTE,LINEA_COBRANZA,DIRECCION_DOMICILIO,CUENTA_BSCS|
+|wt_N1_FACTURAS_EMITIDAS_AXIS|CUSTOMER_ID,FACTURA,CUENTA_BSCS,FECHA_FACTURACION,FECHA_MAX_PAGO,CICLO_FACTURACION,VALOR_FACTURADO,NOMBRES_CLIENTE,DIRECCION_DOMICILIO|
+|wf_N1_FACTURAS_EMITIDAS_HW|SECUENCIAL,NUMERO_FACTURA,ID_CONTRATO,VALOR_FACTURADO,FECHA_MAX_PAGO,FECHA_FACTURACION,FECHA_CORTE,NOMBRES_CLIENTE,DIRECCION_DOMICILIO,CICLO_FACTURACION,CUENTA|
+|wf_N1_CRUCE_VENTA|ID_SERVICIO,CODIGO_VENDEDOR_ANTERIOR,CODIGO_VENDEDOR_ACTUAL,CEDULA_VENDEDOR_ACTUAL,BUSINESS_KEY,CANAL,OFICINA|
 
 
-### 5. Salidas Generadas
+### 4. Archivos de configuración
+Con base a las columnas de cada uno de los arhcivos requeridos por CANAL, los archivos de configuración quedarían de la siguiente manera:
 
-El script produce dos tipos principales de artefactos:
+- CAC's
+cacsLayoutsConfig.json
+```json
+{
+  "layouts": {
+    "wf_N1_EXT_DAS_CAMBIO_ESTADOS_DIARIOS_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTES": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DESC_STATUS": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_TIPO_TRABAJO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ESTADO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "USUARIO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR_BAJA": {
+        "nullIfAbsent": true
+      },
+      "IDENT_VEND_BAJA": {
+        "nullIfAbsent": true
+      },
+      "REASON_VALUE": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_EVENTOS_POSTPAGO_AXIS": {
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "SECUENCIA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "PORTABILIDAD": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO_ALTERNA": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA1_ALTERNA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INICIO_ALTERNA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_COMPLETO_ALTERNO": {
+        "nullIfAbsent": true
+      },
+      "SALDO_ALTERNO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FIN_ALTERNA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_COMPLETO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_DOC": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "DATO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_VENDEDOR_PERSONA": {
+        "nullIfAbsent": true
+      },
+      "ID_TIPO_APROBACION": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "ID_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD1": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "ID_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "NUMERO_FINANCIAMIENTO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INGRESO": {
+        "nullIfAbsent": true
+      },
+      "NUMERO_SERIE": {
+        "nullIfAbsent": true
+      },
+      "ID_CICLO": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA4": {
+        "nullIfAbsent": true
+      },
+      "ID_USUARIO_DIGITADOR": {
+        "nullIfAbsent": true
+      },
+      "VALOR": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA1": {
+        "nullIfAbsent": true
+      },
+      "ID_PLAN": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "FLAG_PORTABILIDAD": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_PRODUCTO": {
+        "nullIfAbsent": true
+      },
+      "CIUDAD": {
+        "nullIfAbsent": true
+      },
+      "DISTRIBUCION_LINEA": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_ASESOR": {
+        "nullIfAbsent": true
+      },
+      "MODELO_EQUIPO": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_FINANCIAMIENTO": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_FACTURADO_FINANCIAMIENTO": {
+        "nullIfAbsent": true
+      },
+      "MONTO_FINANCIADO": {
+        "nullIfAbsent": true
+      },
+      "ENTIDAD_BANCARIA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DSC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_FACTURAS_EMITIDAS_HW": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "NUMERO_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "VALOR_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MAX_PAGO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "FECHA_CORTE": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_DOMICILIO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "CUENTA": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_POSTPAGO_ACTIVACIONES": {
+      "SEQUENCE": {
+        "nullIfAbsent": true
+      },
+      "ORDER_ID": {
+        "nullIfAbsent": true
+      },
+      "ACCT_ID": {
+        "nullIfAbsent": true
+      },
+      "SUBS_ID": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "ID_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "CUST_NAME": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VEND": {
+        "nullIfAbsent": true
+      },
+      "ACTIVE_DATE": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "FLAG_DIFERIDA": {
+        "nullIfAbsent": true
+      },
+      "CLASSIFICATION_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFER_DESC": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID_1": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_TYPE": {
+        "nullIfAbsent": true
+      },
+      "ACCT_CODE": {
+        "nullIfAbsent": true
+      },
+      "STATUS": {
+        "nullIfAbsent": true
+      },
+      "PORTABILITY_ID": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER_1": {
+        "nullIfAbsent": true
+      },
+      "EX_FIELD13_1": {
+        "nullIfAbsent": true
+      },
+      "CREATE_TIME_1": {
+        "nullIfAbsent": true
+      },
+      "CUST_NAME_1": {
+        "nullIfAbsent": true
+      },
+      "INITIAL_AMOUNT": {
+        "nullIfAbsent": true
+      },
+      "COMPLETION_DATE_1": {
+        "nullIfAbsent": true
+      },
+      "ID_TYPE": {
+        "nullIfAbsent": true
+      },
+      "DISTRIBUCION_LINEA": {
+        "nullIfAbsent": true
+      },
+      "FIELD4": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "INSTALLMENT_INST_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_NAME": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_AMOUNT": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_AMOUNT_1": {
+        "nullIfAbsent": true
+      },
+      "INSTALLMENT_INST_ID_1": {
+        "nullIfAbsent": true
+      },
+      "BILL_CYCLE_TYPE_ID": {
+        "nullIfAbsent": true
+      },
+      "STATUS_DATE": {
+        "nullIfAbsent": true
+      },
+      "ADDR": {
+        "nullIfAbsent": true
+      },
+      "EX_FIELD13": {
+        "nullIfAbsent": true
+      },
+      "EX_FIELD1": {
+        "nullIfAbsent": true
+      },
+      "ITEM_NAME": {
+        "nullIfAbsent": true
+      },
+      "ITEM_SKU_NAME": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "ORG_NAME": {
+        "nullIfAbsent": true
+      },
+      "COMPLETION_ORDER_DATE": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MIGRACION": {
+        "nullIfAbsent": true
+      },
+      "PREVIEWS_PAYMENTS": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_DTH_PREVENTA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_PRODUCTO": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "CIUDAD_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "PARROQUIA_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "PROVINCIA_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_DOCUMENTO": {
+        "nullIfAbsent": true
+      },
+      "FLAG_MULTIPUNTO": {
+        "nullIfAbsent": true
+      },
+      "ENTIDAD_BANCARIA": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_USUARIO_SISTEMA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INGRESO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ORDER_ID": {
+        "nullIfAbsent": true
+      },
+      "ID_SUCURSAL": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_DTH_PREVENTA_PB_DTH_PREVENTA": {
+      "DATO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DATO_NOMBRE_COMPLETO": {
+        "nullIfAbsent": true
+      },
+      "ID_VENDEDOR_PERSONA": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "SECUENCIA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_DOC": {
+        "nullIfAbsent": true
+      },
+      "ID_SUBPRODUCTO": {
+        "nullIfAbsent": true
+      },
+      "DATO_ID_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_TIPO_APROBACION": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INGRESO": {
+        "nullIfAbsent": true
+      },
+      "ID_USUARIO_DIGITADOR": {
+        "nullIfAbsent": true
+      },
+      "ID_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "ID_CICLO": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "ENTIDAD_BANCARIA": {
+        "nullIfAbsent": true
+      },
+      "ID_PLAN": {
+        "nullIfAbsent": true
+      },
+      "ID_CATEGORIA_AMX": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DSC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_DAS_EVENTOS_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_DOCUMENTO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR_FIJA": {
+        "nullIfAbsent": true
+      },
+      "COD_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "ID_SUCURSAL": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA_DESCONTADA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_RUC": {
+        "nullIfAbsent": true
+      },
+      "CANAL": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "SID": {
+        "nullIfAbsent": true
+      },
+      "USUARIO_REGISTRO": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "NODO_CLUSTER": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_EVENTOS_FIJA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_DOCUMENTO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "SUBSCRIBERID": {
+        "nullIfAbsent": true
+      },
+      "CUENTA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_SUCURSAL": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA_DESCONTADA": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "TIPO_PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "NODO_CLUSTER": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_EQUIPOS_HANDSET": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "NO_ORDEN": {
+        "nullIfAbsent": true
+      },
+      "NO_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PROD": {
+        "nullIfAbsent": true
+      },
+      "TIPO_TRX": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_PEDIDA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_DEV": {
+        "nullIfAbsent": true
+      },
+      "VALOR_PROD_UNIT": {
+        "nullIfAbsent": true
+      },
+      "CANAL": {
+        "nullIfAbsent": true
+      },
+      "CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "OPERADOR": {
+        "nullIfAbsent": true
+      },
+      "COSTO_EQUIPO": {
+        "nullIfAbsent": true
+      },
+      "DESCUENTO": {
+        "nullIfAbsent": true
+      },
+      "VENTA_NETA": {
+        "nullIfAbsent": true
+      },
+      "MKT_MARCA_MODELO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VEND": {
+        "nullIfAbsent": true
+      },
+      "IMEI": {
+        "nullIfAbsent": true
+      },
+      "MONTO_FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "MARCA": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_EQUIPOS_TV": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "NO_ORDEN": {
+        "nullIfAbsent": true
+      },
+      "FACT_IN_CAJA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PROD": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_PEDIDA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_DEV": {
+        "nullIfAbsent": true
+      },
+      "VALOR_PROD_TOTAL": {
+        "nullIfAbsent": true
+      },
+      "CANAL": {
+        "nullIfAbsent": true
+      },
+      "CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "OPERADOR": {
+        "nullIfAbsent": true
+      },
+      "COSTO_UNIT": {
+        "nullIfAbsent": true
+      },
+      "DESCUENTO_TOTAL": {
+        "nullIfAbsent": true
+      },
+      "VENTA_NETA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VEND": {
+        "nullIfAbsent": true
+      },
+      "MONTO_FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "MARCA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_EQUIPO": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "CATEGORIA": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS": {
+      "SEQUENCE": {
+        "nullIfAbsent": true
+      },
+      "SUBS_ID": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "ACCT_ID": {
+        "nullIfAbsent": true
+      },
+      "ACCT_CODE": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID": {
+        "nullIfAbsent": true
+      },
+      "STATUS": {
+        "nullIfAbsent": true
+      },
+      "STATUS_TIME": {
+        "nullIfAbsent": true
+      },
+      "REASON_ID": {
+        "nullIfAbsent": true
+      },
+      "REASON_VALUE": {
+        "nullIfAbsent": true
+      },
+      "CUST_NAME": {
+        "nullIfAbsent": true
+      },
+      "ID_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "ID_TYPE": {
+        "nullIfAbsent": true
+      },
+      "STATUS_1": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "ACTIVE_DATE": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MIGRACION": {
+        "nullIfAbsent": true
+      },
+      "PREVIEWS_PAYMENTS": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_ESTADOS_DIARIOS_POSTPAGO": {
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "VALOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "SECUENCIA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_COMPLETO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA_4": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION": {
+        "nullIfAbsent": true
+      },
+      "OBSERVACION": {
+        "nullIfAbsent": true
+      },
+      "ID_PLAN": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DSC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_DAS_CAMBIO_ESTADOS_DIARIOS_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTES": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DESC_STATUS": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_TIPO_TRABAJO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ESTADO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "USUARIO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR_BAJA": {
+        "nullIfAbsent": true
+      },
+      "IDENT_VEND_BAJA": {
+        "nullIfAbsent": true
+      },
+      "REAZON_VALUE": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS_FIJA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "ESTADO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_RAZON": {
+        "nullIfAbsent": true
+      },
+      "DESC_RAZON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DESC_ESTATUS": {
+        "nullIfAbsent": true
+      },
+      "SUBSCRIBERID": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS_DTH": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "ESTADO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_RAZON": {
+        "nullIfAbsent": true
+      },
+      "DESC_RAZON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DESC_ESTATUS": {
+        "nullIfAbsent": true
+      },
+      "FLAG_MULTIPUNTO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_SERVICIOS": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_ESTADOS_DIARIOS_DTH": {
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "VALOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "SECUENCIA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_COMPLETO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA_4": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_SERVICIOS": {
+        "nullIfAbsent": true
+      },
+      "OBSERVACION": {
+        "nullIfAbsent": true
+      },
+      "ID_PLAN": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_CAMBIO_PLANES_DIARIOS": {
+      "SEQUENCE": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "ORDER_ID": {
+        "nullIfAbsent": true
+      },
+      "ACTIVE_DATE": {
+        "nullIfAbsent": true
+      },
+      "ACCT_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID1": {
+        "nullIfAbsent": true
+      },
+      "STATUS_DATE": {
+        "nullIfAbsent": true
+      },
+      "ACCT_CODE": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MIGRACION": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_NUEVA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PROGRAMACION": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_PLANES_DIARIOS_POSTPAGO": {
+      "SEQUENCE": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "ORDER_ID": {
+        "nullIfAbsent": true
+      },
+      "ACTIVE_DATE": {
+        "nullIfAbsent": true
+      },
+      "ACCT_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID1": {
+        "nullIfAbsent": true
+      },
+      "STATUS_DATE": {
+        "nullIfAbsent": true
+      },
+      "ACCT_CODE": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MIGRACION": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_NUEVA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FIN": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_CAMBIO_PLANES_DIARIOS_DTH": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INICIO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_NUEVA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PROGRAMACION": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_CAMBIO_PLANES_DIARIOS_FIJA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INICIO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FIN": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "SUBSCRIBERID": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_NUEVA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA_DESCONTADA": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PROGRAMACION": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_CAMBIO_PLANES_DIARIOS_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FIN": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "SUBSCRIBERID": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_NUEVA": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA_CAC": {
+        "nullIfAbsent": true
+      },
+      "BUSSINES_KEY": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_PLANES_DIARIOS_DTH": {
+      "SEQUENCE": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "ORDER_ID": {
+        "nullIfAbsent": true
+      },
+      "ACTIVE_DATE": {
+        "nullIfAbsent": true
+      },
+      "ACCT_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID1": {
+        "nullIfAbsent": true
+      },
+      "STATUS_DATE": {
+        "nullIfAbsent": true
+      },
+      "ACCT_CODE": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MIGRACION": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_NUEVA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PLAN_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FIN": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_OFERTA_BONDLE": {
+      "ORDER_ID": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INICIO": {
+        "nullIfAbsent": true
+      },
+      "GROUP_ID": {
+        "nullIfAbsent": true
+      },
+      "GROUP_NAME": {
+        "nullIfAbsent": true
+      },
+      "OFERTA_BUNDLE": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "TRANSACCION_GRUPO": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_NAME": {
+        "nullIfAbsent": true
+      },
+      "TRANSACCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_FEATURES_MOVIL_AXIS": {
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "PRECIO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA_PRINCIPAL": {
+        "nullIfAbsent": true
+      },
+      "SECUENCIA_MARCA_PRINCIPAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ALTA": {
+        "nullIfAbsent": true
+      },
+      "CUENTA": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_FEATURES_MOVIL_POSTPAGO": {
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "PRECIO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "CUENTA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACT_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_FEATURES_PPA": {
+      "SERVICE_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "LINE_STATUS": {
+        "nullIfAbsent": true
+      },
+      "SUBPRODUCT": {
+        "nullIfAbsent": true
+      },
+      "ID_CUSTOMER": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_PLAN": {
+        "nullIfAbsent": true
+      },
+      "PLAN_NAME": {
+        "nullIfAbsent": true
+      },
+      "ID_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "DESC_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "START_DATE": {
+        "nullIfAbsent": true
+      },
+      "FEATURE_STATUS": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_RATE": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_NAME": {
+        "nullIfAbsent": true
+      },
+      "CAC_OFFICE": {
+        "nullIfAbsent": true
+      },
+      "BASE_RATE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ESTADO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ESTADO_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wt_N1_FACTURAS_EMITIDAS_SGA": {
+      "ID_INTERNO": {
+        "nullIfAbsent": true
+      },
+      "NRO_PROYECTO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MAX_PAGO": {
+        "nullIfAbsent": true
+      },
+      "FEC_EMISION_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_CORTE": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "ID_CICLO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "LINEA_COBRANZA": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_DOMICILIO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      }
+    },
+    "wt_N1_FACTURAS_EMITIDAS_AXIS": {
+      "CUSTOMER_ID": {
+        "nullIfAbsent": true
+      },
+      "FACTURA": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MAX_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "VALOR_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_DOMICILIO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_FACTURAS_PAGADAS_AXIS": {
+      "NO_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "VALOR_PAGADO": {
+        "nullIfAbsent": true
+      },
+      "VALOR_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "DESC_FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ENTIDAD": {
+        "nullIfAbsent": true
+      },
+      "MEDIO_CANAL": {
+        "nullIfAbsent": true
+      },
+      "REGION": {
+        "nullIfAbsent": true
+      },
+      "GRUPO": {
+        "nullIfAbsent": true
+      },
+      "USUARIO": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_FACTURAS_PAGADAS_HW": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "NUMERO_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "VALOR_PAGADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "VALOR_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ENTIDAD": {
+        "nullIfAbsent": true
+      },
+      "PROP_VALUE": {
+        "nullIfAbsent": true
+      },
+      "CUST_SEGMENT": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "PAYMENT_METHOD_ID": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_FACTURAS_PAGADAS_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_INTERNO": {
+        "nullIfAbsent": true
+      },
+      "FEC_EMISION_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "VALOR_PAGADO": {
+        "nullIfAbsent": true
+      },
+      "LINEA_COBRANZA": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_DOMICILIO": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "PAYMENT_METHOD_ID": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_CRUCE_VENTA": {
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "CEDULA_VENDEDOR_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "CANAL": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_FEATURE_DTH_PREVENTA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "FECH_ACT_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "ESTADO_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FLAG_MULTIPUNTO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY_F": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "FLAG_TIPO_EVENTO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA": {
+        "nullIfAbsent": true
+      },
+      "CIUDAD_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "PARROQUIA_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "PROVINCIA_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_DOCUMENTO": {
+        "nullIfAbsent": true
+      },
+      "ENTIDAD_BANCARIA": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TEGNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_FEATURES_FIJA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "FECH_ACT_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "ESTADO_FEATURE": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FLAG_MULTIPUNTO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY_F": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "FLAG_TIPO_EVENTO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA": {
+        "nullIfAbsent": true
+      },
+      "CIUDAD_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "PARROQUIA_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "PROVINCIA_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_DOCUMENTO": {
+        "nullIfAbsent": true
+      },
+      "ENTIDAD_BANCARIA": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA_DESCONTADA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_DAS_FEATURES_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA_DESCONTADA": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "ESTADO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTES": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_RUC": {
+        "nullIfAbsent": true
+      },
+      "CANAL": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "TIPO_PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "SID": {
+        "nullIfAbsent": true
+      },
+      "USUARIO_REGISTRO": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_ADICIONAL": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    }
+  }
+}
+```
 
-#### Archivos de Datos Procesados
-
-- Ruta de Salida: Se crean subdirectorios dinámicos dentro de main_dir:
-
-    - {main_dir}/cacs/
-
-    - {main_dir}/cc/
-
-- Nombres de Archivo: {layout}_out.txt
-
-- Contenido: DataFrames que contienen solo las columnas especificadas en el archivo de configuración correspondiente.
-
-#### Archivos de Registro (Logs)
-
-- Ruta de Salida: Se generan en el directorio de ejecución del script (no en main_dir).
-
-- Nombres de Archivo: {layout}_log.txt
-
-- Contenido: Un registro simple ("w", lo que significa que sobrescribe el archivo en cada ejecución de layout) que indica si una columna requerida por la configuración no se encontró en el archivo de datos base.
-
-### 6. Puntos de Mejora y Posibles Problemas
-
-|Aspecto|Detalle|Sugerencia de Mejora|
-|---|---|---|
-|Manejo de Logs|El log actual ("w") se sobrescribe cada vez que se detecta una columna faltante, lo que significa que solo registra el último error para un layout dado.|Cambiar el modo de apertura a append ("a") o recopilar todos los errores en una lista y escribirlos una sola vez al final del procesamiento de un layout.
-|Rutas de Archivos|Las rutas (config_dir, files_dir, etc.) se construyen con f-strings sin usar os.path.join, lo que puede causar problemas de compatibilidad entre sistemas operativos (Windows vs. Linux/Mac).|Utilizar os.path.join(files_dir, f'{layout}.txt') para construir rutas de manera robusta.
-|Codificación|Se usa 'latin 1' tanto para lectura como para escritura. Si los archivos de datos de entrada o el entorno de configuración manejan UTF-8, esto puede causar errores de caracteres.|Evaluar si se debe estandarizar a 'utf-8' o hacer la codificación una variable de configuración.
-|Reutilización de Código|La lógica para la exportación de archivos (os.makedirs y df_out.to_csv) se duplica para los casos "cacs" y "cc".|Refactorizar el código para definir una función de exportación que tome el subdirectorio como argumento, eliminando la duplicación.
-|Estructura de la Variable content|Se asume que las variables como content, config_dir, files_dir, y main_dir ya existen en el ámbito global o han sido inicializadas|Se recomienda que el script principal esté envuelto en una función (def main():) para manejar variables de entrada de forma clara y explícita.
+- CC
+ccLayoutsConfig.json
+```json
+{
+  "layouts": {
+    "wf_N1_EXT_EVENTOS_POSTPAGO_AXIS": {
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "SECUENCIA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "PORTABILIDAD": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO_ALTERNA": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA1_ALTERNA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INICIO_ALTERNA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_COMPLETO_ALTERNO": {
+        "nullIfAbsent": true
+      },
+      "SALDO_ALTERNO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FIN_ALTERNA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_COMPLETO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_DOC": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "DATO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_VENDEDOR_PERSONA": {
+        "nullIfAbsent": true
+      },
+      "ID_TIPO_APROBACION": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "ID_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD1": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "ID_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "NUMERO_FINANCIAMIENTO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INGRESO": {
+        "nullIfAbsent": true
+      },
+      "NUMERO_SERIE": {
+        "nullIfAbsent": true
+      },
+      "ID_CICLO": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA4": {
+        "nullIfAbsent": true
+      },
+      "ID_USUARIO_DIGITADOR": {
+        "nullIfAbsent": true
+      },
+      "VALOR": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA1": {
+        "nullIfAbsent": true
+      },
+      "ID_PLAN": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "FLAG_PORTABILIDAD": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_PRODUCTO": {
+        "nullIfAbsent": true
+      },
+      "CIUDAD": {
+        "nullIfAbsent": true
+      },
+      "DISTRIBUCION_LINEA": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_ASESOR": {
+        "nullIfAbsent": true
+      },
+      "MODELO_EQUIPO": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_FINANCIAMIENTO": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_FACTURADO_FINANCIAMIENTO": {
+        "nullIfAbsent": true
+      },
+      "MONTO_FINANCIADO": {
+        "nullIfAbsent": true
+      },
+      "ENTIDAD_BANCARIA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DSC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "Wf_N1_EXT_POSTPAGO_ACTIVACIONES": {
+      "SEQUENCE": {
+        "nullIfAbsent": true
+      },
+      "ORDER_ID": {
+        "nullIfAbsent": true
+      },
+      "ACCT_ID": {
+        "nullIfAbsent": true
+      },
+      "SUBS_ID": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "ID_NUMBER": {
+        "nullIfAbsent": true
+      },
+      "CUST_NAME": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VEND": {
+        "nullIfAbsent": true
+      },
+      "ACTIVE_DATE": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "FLAG_DIFERIDA": {
+        "nullIfAbsent": true
+      },
+      "CLASSIFICATION_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFER_DESC": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_ID_1": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_TYPE": {
+        "nullIfAbsent": true
+      },
+      "ACCT_CODE": {
+        "nullIfAbsent": true
+      },
+      "STATUS": {
+        "nullIfAbsent": true
+      },
+      "PORTABILITY_ID": {
+        "nullIfAbsent": true
+      },
+      "SERVICE_NUMBER_1": {
+        "nullIfAbsent": true
+      },
+      "EX_FIELD13_1": {
+        "nullIfAbsent": true
+      },
+      "CREATE_TIME_1": {
+        "nullIfAbsent": true
+      },
+      "CUST_NAME_1": {
+        "nullIfAbsent": true
+      },
+      "INITIAL_AMOUNT": {
+        "nullIfAbsent": true
+      },
+      "COMPLETION_DATE_1": {
+        "nullIfAbsent": true
+      },
+      "ID_TYPE": {
+        "nullIfAbsent": true
+      },
+      "DISTRIBUCION_LINEA": {
+        "nullIfAbsent": true
+      },
+      "FIELD4": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "INSTALLMENT_INST_ID": {
+        "nullIfAbsent": true
+      },
+      "OFFERING_NAME": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_AMOUNT": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_AMOUNT_1": {
+        "nullIfAbsent": true
+      },
+      "INSTALLMENT_INST_ID_1": {
+        "nullIfAbsent": true
+      },
+      "BILL_CYCLE_TYPE_ID": {
+        "nullIfAbsent": true
+      },
+      "STATUS_DATE": {
+        "nullIfAbsent": true
+      },
+      "ADDR": {
+        "nullIfAbsent": true
+      },
+      "EX_FIELD13": {
+        "nullIfAbsent": true
+      },
+      "EX_FIELD1": {
+        "nullIfAbsent": true
+      },
+      "ITEM_NAME": {
+        "nullIfAbsent": true
+      },
+      "ITEM_SKU_NAME": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "ORG_NAME": {
+        "nullIfAbsent": true
+      },
+      "COMPLETION_ORDER_DATE": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MIGRACION": {
+        "nullIfAbsent": true
+      },
+      "PREVIEWS_PAYMENTS": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_DTH_PREVENTA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_PRODUCTO": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "CIUDAD_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "PARROQUIA_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "PROVINCIA_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_INSTALACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_DOCUMENTO": {
+        "nullIfAbsent": true
+      },
+      "FLAG_MULTIPUNTO": {
+        "nullIfAbsent": true
+      },
+      "ENTIDAD_BANCARIA": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_USUARIO_SISTEMA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INGRESO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ORDER_ID": {
+        "nullIfAbsent": true
+      },
+      "ID_SUCURSAL": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_DTH_PREVENTA_PB_DTH_PREVENTA": {
+      "DATO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DATO_NOMBRE_COMPLETO": {
+        "nullIfAbsent": true
+      },
+      "ID_VENDEDOR_PERSONA": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "SECUENCIA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_DOC": {
+        "nullIfAbsent": true
+      },
+      "ID_SUBPRODUCTO": {
+        "nullIfAbsent": true
+      },
+      "DATO_ID_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_TIPO_APROBACION": {
+        "nullIfAbsent": true
+      },
+      "FECHA_INGRESO": {
+        "nullIfAbsent": true
+      },
+      "ID_USUARIO_DIGITADOR": {
+        "nullIfAbsent": true
+      },
+      "ID_VENDEDOR_ESPECIFICO": {
+        "nullIfAbsent": true
+      },
+      "ID_CICLO": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "ENTIDAD_BANCARIA": {
+        "nullIfAbsent": true
+      },
+      "ID_PLAN": {
+        "nullIfAbsent": true
+      },
+      "ID_CATEGORIA_AMX": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DSC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_DAS_EVENTOS_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_DOCUMENTO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR_FIJA": {
+        "nullIfAbsent": true
+      },
+      "COD_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "ID_SUCURSAL": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA_DESCONTADA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_RUC": {
+        "nullIfAbsent": true
+      },
+      "CANAL": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "SID": {
+        "nullIfAbsent": true
+      },
+      "USUARIO_REGISTRO": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "NODO_CLUSTER": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_EVENTOS_FIJA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "TIPO_ALTA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_DOCUMENTO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "ESTADO": {
+        "nullIfAbsent": true
+      },
+      "SUBSCRIBERID": {
+        "nullIfAbsent": true
+      },
+      "CUENTA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "ID_SOLICITUD": {
+        "nullIfAbsent": true
+      },
+      "ID_SUCURSAL": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA_DESCONTADA": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "TIPO_PAQUETE": {
+        "nullIfAbsent": true
+      },
+      "ID_EMPLEADO": {
+        "nullIfAbsent": true
+      },
+      "NODO_CLUSTER": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "SEGMENTO_CLIENTE": {
+        "nullIfAbsent": true
+      }
+    },
+    "Wf_N1_EXT_DAS_CAMBIO_ESTADOS_DIARIOS_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTES": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DESC_STATUS": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_TIPO_TRABAJO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ESTADO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "PRECIO_RENTA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "USUARIO_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR_BAJA": {
+        "nullIfAbsent": true
+      },
+      "IDENT_VEND_BAJA": {
+        "nullIfAbsent": true
+      },
+      "REAZON_VALUE": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      }
+    },
+    "Wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS_FIJA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "ESTADO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_RAZON": {
+        "nullIfAbsent": true
+      },
+      "DESC_RAZON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DESC_ESTATUS": {
+        "nullIfAbsent": true
+      },
+      "SUBSCRIBERID": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "Wf_N1_EXT_CAMBIO_ESTADOS_DIARIOS_DTH": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "PRODUCTO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "ESTADO_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_RAZON": {
+        "nullIfAbsent": true
+      },
+      "DESC_RAZON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "DESC_ESTATUS": {
+        "nullIfAbsent": true
+      },
+      "FLAG_MULTIPUNTO": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "FECHA_ACTIVACION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_SERVICIOS": {
+        "nullIfAbsent": true
+      },
+      "CANTON": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_EXT_ESTADOS_DIARIOS_DTH": {
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "VALOR": {
+        "nullIfAbsent": true
+      },
+      "FECHA_DESDE": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "SECUENCIA_MARCA": {
+        "nullIfAbsent": true
+      },
+      "ID_DETALLE_PLAN": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_COMPLETO": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "ID_IDENTIFICACION": {
+        "nullIfAbsent": true
+      },
+      "REFERENCIA_4": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION": {
+        "nullIfAbsent": true
+      },
+      "TIPO_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "FAMILIA": {
+        "nullIfAbsent": true
+      },
+      "TECNOLOGIA": {
+        "nullIfAbsent": true
+      },
+      "CANTIDAD_SERVICIOS": {
+        "nullIfAbsent": true
+      },
+      "OBSERVACION": {
+        "nullIfAbsent": true
+      },
+      "ID_PLAN": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "IDENTIFICACION_VENDEDOR": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      },
+      "TARIFA_BASICA": {
+        "nullIfAbsent": true
+      },
+      "DESC_PLAN_ACTUAL": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_FACTURAS_PAGADAS_HW": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "NUMERO_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "VALOR_PAGADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "VALOR_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "DESCRIPCION_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ENTIDAD": {
+        "nullIfAbsent": true
+      },
+      "PROP_VALUE": {
+        "nullIfAbsent": true
+      },
+      "CUST_SEGMENT": {
+        "nullIfAbsent": true
+      },
+      "EMPLOYEE_CODE": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "PAYMENT_METHOD_ID": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_FACTURAS_PAGADAS_FIJA_SGA": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "ID_INTERNO": {
+        "nullIfAbsent": true
+      },
+      "FEC_EMISION_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "VALOR_PAGADO": {
+        "nullIfAbsent": true
+      },
+      "LINEA_COBRANZA": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_DOMICILIO": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "PAYMENT_METHOD_ID": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_FACTURAS_PAGADAS_AXIS": {
+      "NO_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "VALOR_PAGADO": {
+        "nullIfAbsent": true
+      },
+      "VALOR_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "DESC_FORMA_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_ENTIDAD": {
+        "nullIfAbsent": true
+      },
+      "MEDIO_CANAL": {
+        "nullIfAbsent": true
+      },
+      "REGION": {
+        "nullIfAbsent": true
+      },
+      "GRUPO": {
+        "nullIfAbsent": true
+      },
+      "USUARIO": {
+        "nullIfAbsent": true
+      },
+      "FORMA_PAGO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wt_N1_FACTURAS_EMITIDAS_SGA": {
+      "ID_INTERNO": {
+        "nullIfAbsent": true
+      },
+      "NRO_PROYECTO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MAX_PAGO": {
+        "nullIfAbsent": true
+      },
+      "FEC_EMISION_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "FECHA_CORTE": {
+        "nullIfAbsent": true
+      },
+      "TOTAL_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "ID_CICLO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "NOMBRE_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "LINEA_COBRANZA": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_DOMICILIO": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      }
+    },
+    "wt_N1_FACTURAS_EMITIDAS_AXIS": {
+      "CUSTOMER_ID": {
+        "nullIfAbsent": true
+      },
+      "FACTURA": {
+        "nullIfAbsent": true
+      },
+      "CUENTA_BSCS": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MAX_PAGO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "VALOR_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_DOMICILIO": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_FACTURAS_EMITIDAS_HW": {
+      "SECUENCIAL": {
+        "nullIfAbsent": true
+      },
+      "NUMERO_FACTURA": {
+        "nullIfAbsent": true
+      },
+      "ID_CONTRATO": {
+        "nullIfAbsent": true
+      },
+      "VALOR_FACTURADO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_MAX_PAGO": {
+        "nullIfAbsent": true
+      },
+      "FECHA_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "FECHA_CORTE": {
+        "nullIfAbsent": true
+      },
+      "NOMBRES_CLIENTE": {
+        "nullIfAbsent": true
+      },
+      "DIRECCION_DOMICILIO": {
+        "nullIfAbsent": true
+      },
+      "CICLO_FACTURACION": {
+        "nullIfAbsent": true
+      },
+      "CUENTA": {
+        "nullIfAbsent": true
+      }
+    },
+    "wf_N1_CRUCE_VENTA": {
+      "ID_SERVICIO": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR_ANTERIOR": {
+        "nullIfAbsent": true
+      },
+      "CODIGO_VENDEDOR_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "CEDULA_VENDEDOR_ACTUAL": {
+        "nullIfAbsent": true
+      },
+      "BUSINESS_KEY": {
+        "nullIfAbsent": true
+      },
+      "CANAL": {
+        "nullIfAbsent": true
+      },
+      "OFICINA": {
+        "nullIfAbsent": true
+      }
+    }
+  }
+}
+```
